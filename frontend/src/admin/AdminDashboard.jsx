@@ -23,8 +23,8 @@ import {
   X,
 } from "lucide-react";
 
-const API = "http://localhost:5000/api";
-const SERVER_URL = "http://localhost:5000";
+const API = "https://andhra-dry-fish.onrender.com/api";
+const SERVER_URL = "https://andhra-dry-fish.onrender.com";
 
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "ADF@2026";
