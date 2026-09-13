@@ -23,8 +23,8 @@ import {
 } from "lucide-react";
 import "./style.css";
 
-const API = "http://localhost:5000/api";
-const BACKEND_URL = "http://localhost:5000";
+const BACKEND_URL = "https://andhra-dry-fish.onrender.com";
+const API = "https://andhra-dry-fish.onrender.com/api";
 
 const UPI_ID = "attelnarayana@okhdfcbank";
 const UPI_NAME = "Andhra Dry Fish";
