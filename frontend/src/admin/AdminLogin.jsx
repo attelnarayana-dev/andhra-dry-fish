@@ -6,7 +6,7 @@ import {
   UserRound,
 } from "lucide-react";
 
-const API = "http://localhost:5000/api";
+const API = "https://andhra-dry-fish.onrender.com/api";
 
 export default function AdminLogin({ onLogin }) {
   const [username, setUsername] = useState("");
