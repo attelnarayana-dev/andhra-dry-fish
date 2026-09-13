@@ -1243,8 +1243,15 @@ app.use(
 
 loadDatabase();
 
+/* =========================
+   START SERVER
+========================= */
+
+loadDatabase();
+
 app.listen(
   PORT,
+  "0.0.0.0",
   () => {
     console.log("");
     console.log(
@@ -1257,13 +1264,13 @@ app.listen(
       "======================================"
     );
     console.log(
-      `🚀 Server: http://localhost:${PORT}`
+      `🚀 Server running on port ${PORT}`
     );
     console.log(
-      `❤️ Health: http://localhost:${PORT}/api/health`
+      `❤️ Health: /api/health`
     );
     console.log(
-      `🐟 Products: http://localhost:${PORT}/api/products`
+      `🐟 Products: /api/products`
     );
     console.log(
       "🔐 Admin: /api/admin/login"
