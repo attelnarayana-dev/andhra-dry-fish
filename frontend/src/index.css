@@ -1,0 +1,319 @@
+```css
+:root {
+  /* =================================
+     ANDHRA DRY FISH – DARK PREMIUM
+  ================================= */
+
+  --text: #c9c0b7;
+  --text-h: #fff8ee;
+
+  /* Main Background */
+  --bg: #11100e;
+
+  /* Cards */
+  --surface: #1b1916;
+
+  /* Borders */
+  --border: #302b25;
+
+  /* Light Sections */
+  --code-bg: #211e1a;
+
+  /* Brand Accent */
+  --accent: #d97832;
+  --accent-bg: rgba(217, 120, 50, 0.12);
+  --accent-border: rgba(217, 120, 50, 0.45);
+
+  --social-bg: rgba(40, 36, 31, 0.7);
+
+  /* Premium Shadow */
+  --shadow:
+    rgba(0, 0, 0, 0.45) 0 15px 35px -8px,
+    rgba(0, 0, 0, 0.3) 0 6px 15px -4px;
+
+  --sans: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --heading: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+
+  letter-spacing: 0.18px;
+
+  color-scheme: dark;
+
+  color: var(--text);
+  background: var(--bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* =================================
+   HTML
+================================= */
+
+html {
+  margin: 0;
+  padding: 0;
+
+  background: #11100e;
+}
+
+
+/* =================================
+   BODY
+================================= */
+
+body {
+  margin: 0;
+  padding: 0;
+
+  min-width: 500px;
+  min-height: 100vh;
+
+  background: #11100e;
+
+  color: #c9c0b7;
+
+  font-family: var(--sans);
+}
+
+
+/* =================================
+   ROOT
+================================= */
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+
+  margin: 0 auto;
+
+  text-align: center;
+
+  border-inline: 1px solid #302b25;
+
+  min-height: 100svh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  background: #11100e;
+}
+
+
+/* =================================
+   HEADINGS
+================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading);
+
+  color: var(--text-h);
+}
+
+
+/* =================================
+   H1
+================================= */
+
+h1 {
+  font-size: 56px;
+
+  letter-spacing: -1.68px;
+
+  margin: 32px 0;
+
+  font-weight: 800;
+}
+
+
+/* =================================
+   H2
+================================= */
+
+h2 {
+  font-size: 24px;
+
+  line-height: 118%;
+
+  letter-spacing: -0.24px;
+
+  margin: 0 0 8px;
+
+  font-weight: 800;
+}
+
+
+/* =================================
+   H3
+================================= */
+
+h3 {
+  font-weight: 800;
+
+  color: #fff8ee;
+}
+
+
+/* =================================
+   H4 / H5 / H6
+================================= */
+
+h4,
+h5,
+h6 {
+  color: #f4eadf;
+}
+
+
+/* =================================
+   PARAGRAPHS
+================================= */
+
+p {
+  margin: 0;
+}
+
+
+/* =================================
+   LINKS
+================================= */
+
+a {
+  color: inherit;
+
+  text-decoration: none;
+}
+
+
+/* =================================
+   BUTTONS
+================================= */
+
+button {
+  font-family: var(--sans);
+}
+
+
+/* =================================
+   CODE
+================================= */
+
+code,
+.counter {
+  font-family: var(--mono);
+
+  display: inline-flex;
+
+  border-radius: 4px;
+
+  color: #fff8ee;
+}
+
+
+code {
+  font-size: 15px;
+
+  line-height: 135%;
+
+  padding: 4px 8px;
+
+  background: #211e1a;
+}
+
+
+/* =================================
+   TEXT SELECTION
+================================= */
+
+::selection {
+  background: rgba(217, 120, 50, 0.3);
+
+  color: #ffffff;
+}
+
+
+/* =================================
+   SCROLLBAR
+================================= */
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+
+::-webkit-scrollbar-track {
+  background: #11100e;
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: #493d31;
+
+  border-radius: 20px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d97832;
+}
+
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 1024px) {
+  :root {
+    font-size: 16px;
+  }
+
+  #root {
+    width: 100%;
+
+    max-width: 100%;
+
+    border-inline: none;
+  }
+
+  h1 {
+    font-size: 36px;
+
+    margin: 20px 0;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+
+/* =================================
+   SMALL MOBILE
+================================= */
+
+@media (max-width: 600px) {
+  body {
+    min-width: 320px;
+  }
+
+  #root {
+    width: 100%;
+
+    min-height: 100svh;
+  }
+}
+```

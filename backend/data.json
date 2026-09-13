@@ -1,0 +1,331 @@
+{
+  "products": [
+    {
+      "id": "ADF002",
+      "name": "Dry Anchovies (Nethallu) | Big Size",
+      "category": "Dry Fish",
+      "price": 220,
+      "oldPrice": 650,
+      "weight": "500g",
+      "description": "Large-size traditional Nethallu with authentic coastal flavour.",
+      "image": "/uploads/products/1789301955519-822726187.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF003",
+      "name": "Dry Anchovies (Nethalu) | Small Size Sale price",
+      "category": "Dry Fish",
+      "price": 200,
+      "oldPrice": 600,
+      "weight": "500g",
+      "description": "Traditional Andhra Bommidayalu carefully selected and packed.",
+      "image": "/uploads/products/1789307926944-437666172.webp",
+      "stock": 18,
+      "featured": true
+    },
+    {
+      "id": "ADF006",
+      "name": "Dry Pandugappa Fish",
+      "category": "Dry Fish",
+      "price": 400,
+      "oldPrice": 700,
+      "weight": "500g",
+      "description": "Classic Andhra dry fish, naturally dried and hygienically packed.",
+      "image": "/uploads/products/1789308037960-868952120.webp",
+      "stock": 22,
+      "featured": false
+    },
+    {
+      "id": "ADF1789308185932",
+      "name": "Dry Savidalu (Ribbon Fish) | Big Size",
+      "category": "Dry Fish",
+      "price": 220,
+      "oldPrice": 500,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308185942-998527327.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789308282146",
+      "name": "Dry Bombay Duck (Bommidayalu)",
+      "category": "Dry Fish",
+      "price": 555,
+      "oldPrice": 700,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308282154-210764060.webp",
+      "stock": 25,
+      "featured": true
+    },
+    {
+      "id": "ADF1789308342325",
+      "name": "Dry Kona Fish Pieces",
+      "category": "Dry Fish",
+      "price": 399,
+      "oldPrice": 500,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308342334-364406894.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789308410765",
+      "name": "Dry Seer Fish (Vanjaram)",
+      "category": "Dry Fish",
+      "price": 300,
+      "oldPrice": 500,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308410773-718546733.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789308471468",
+      "name": "Dry Kanakanthalu (Indian Mackerel)",
+      "category": "Dry Fish",
+      "price": 220,
+      "oldPrice": 300,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308471478-883440975.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789308610242",
+      "name": "Saltless Kukka Savidalu | 100% Salt-Free Dry Fish Strips",
+      "category": "Dry Fish",
+      "price": 250,
+      "oldPrice": 400,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308610248-205941961.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789308669337",
+      "name": "Sappidi savideyalu",
+      "category": "Dry Fish",
+      "price": 250,
+      "oldPrice": 250,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308669344-189559448.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789308743601",
+      "name": "Katti Pariga Dry Fish | Small Size",
+      "category": "Dry Fish",
+      "price": 150,
+      "oldPrice": 250,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308743609-721502988.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789308805961",
+      "name": "Katti Pariga Dry Fish | Small Size",
+      "category": "Dry Fish",
+      "price": 170,
+      "oldPrice": 220,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308805970-181847054.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789308862023",
+      "name": "Dry Barramundi (Pandu Gorakalu)",
+      "category": "Dry Fish",
+      "price": 320,
+      "oldPrice": 450,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789308862030-772892157.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789310294536",
+      "name": "River Whiting Dry Fish (Isuka Dondulu)",
+      "category": "Dry Fish",
+      "price": 320,
+      "oldPrice": 400,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310294558-742212216.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789310384334",
+      "name": "Dry Tilapia Fish (Gorakallu)",
+      "category": "Dry Fish",
+      "price": 160,
+      "oldPrice": 200,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310384352-354208604.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789310438970",
+      "name": "Dry Karuvallu Fish",
+      "category": "Dry Fish",
+      "price": 330,
+      "oldPrice": 400,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310438984-665506638.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789310524883",
+      "name": "Dry Tiny Needle Fish (Pusa Paregelu)",
+      "category": "Dry Fish",
+      "price": 250,
+      "oldPrice": 330,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310524891-671465439.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789310713153",
+      "name": "Premium Cleaned Dry Prawns | No Head, No Tail - 100% Prawn Meat",
+      "category": "Dry Prawns",
+      "price": 520,
+      "oldPrice": 600,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310713161-492143808.png",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789310766001",
+      "name": "Royya Pottu - Baby shrimp",
+      "category": "Dry Prawns",
+      "price": 180,
+      "oldPrice": 220,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310766010-896856451.webp",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": "ADF1789310826104",
+      "name": "Ocean Dry Prawns (Samudram Royyalu)",
+      "category": "Dry Prawns",
+      "price": 700,
+      "oldPrice": 800,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310826115-964001230.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789310884534",
+      "name": "Dry Prawns | Big Size",
+      "category": "Dry Prawns",
+      "price": 399,
+      "oldPrice": 450,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310884544-280043999.webp",
+      "stock": 20,
+      "featured": true
+    },
+    {
+      "id": "ADF1789310955737",
+      "name": "Godavari Royyalu (Smoked & Sun-Dried Prawns)",
+      "category": "Dry Prawns",
+      "price": 340,
+      "oldPrice": 420,
+      "weight": "500g",
+      "description": "",
+      "image": "/uploads/products/1789310955746-470445607.webp",
+      "stock": 20,
+      "featured": true
+    }
+  ],
+  "orders": [
+    {
+      "id": "ADF-1789231897025",
+      "createdAt": "2026-09-12T16:51:37.025Z",
+      "customer": {
+        "name": "santhosh",
+        "phone": "8179975476",
+        "email": "attelnarayana@gmail.com",
+        "address": "1 ramalyam",
+        "city": "CHANDRA SEKHARA PURAM",
+        "state": "Andhra Pradesh",
+        "pincode": "523112"
+      },
+      "items": [
+        {
+          "productId": "ADF001",
+          "name": "Premium Nethallu",
+          "price": 499,
+          "weight": "250g",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 499,
+      "deliveryCharge": 99,
+      "total": 598,
+      "paymentMethod": "UPI",
+      "status": "Packed",
+      "timeline": [
+        {
+          "status": "Order Placed",
+          "date": "2026-09-12T16:51:37.025Z"
+        },
+        {
+          "status": "Confirmed",
+          "date": "2026-09-13T13:20:44.469Z"
+        },
+        {
+          "status": "Shipped",
+          "date": "2026-09-13T13:20:47.504Z"
+        },
+        {
+          "status": "Out for Delivery",
+          "date": "2026-09-13T13:20:54.057Z"
+        },
+        {
+          "status": "Delivered",
+          "date": "2026-09-13T13:20:56.157Z"
+        },
+        {
+          "status": "Order Placed",
+          "date": "2026-09-13T13:20:59.050Z"
+        },
+        {
+          "status": "Confirmed",
+          "date": "2026-09-13T13:21:01.428Z"
+        },
+        {
+          "status": "Packed",
+          "date": "2026-09-13T13:37:28.915Z"
+        }
+      ]
+    }
+  ]
+}

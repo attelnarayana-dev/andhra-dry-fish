@@ -1,0 +1,1656 @@
+import { createRoot } from "react-dom/client";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  ArrowRight,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Mail,
+  MapPin,
+  Menu,
+  Minus,
+  Package,
+  Phone,
+  Plus,
+  Search,
+  ShoppingBag,
+  ShoppingCart,
+  Truck,
+  User,
+  X,
+} from "lucide-react";
+import "./style.css";
+
+const API = "http://localhost:5000/api";
+
+const demoVisuals = {
+  ADF001: "🐟",
+  ADF002: "🐟",
+  ADF003: "🐠",
+  ADF004: "🐟",
+  ADF005: "🦑",
+  ADF006: "🐟",
+  ADF007: "🦐",
+  ADF008: "🦐",
+  ADF009: "🦐",
+  ADF010: "🧺",
+};
+
+function App() {
+  const [page, setPage] = useState("home");
+  const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [order, setOrder] = useState(null);
+
+  useEffect(() => {
+    fetch(`${API}/products`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setProducts(data.products || []);
+      })
+      .catch((err) => console.error("Products error:", err));
+  }, []);
+
+  const categories = ["All", "Dry Fish", "Dry Prawns", "Combos"];
+
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesCategory =
+        category === "All" || product.category === category;
+
+      const q = search.toLowerCase().trim();
+
+      const matchesSearch =
+        !q ||
+        product.name?.toLowerCase().includes(q) ||
+        product.category?.toLowerCase().includes(q);
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [products, category, search]);
+
+  const featuredProducts = products.filter((p) => p.featured);
+
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const addToCart = (product, quantity = 1) => {
+    setCart((current) => {
+      const existing = current.find((item) => item.id === product.id);
+
+      if (existing) {
+        return current.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+
+      return [...current, { ...product, quantity }];
+    });
+  };
+
+  const updateQuantity = (id, quantity) => {
+    if (quantity <= 0) {
+      setCart((current) => current.filter((item) => item.id !== id));
+      return;
+    }
+
+    setCart((current) =>
+      current.map((item) =>
+        item.id === id ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const openProduct = (product) => {
+    setSelectedProduct(product);
+    setPage("product");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const goTo = (target) => {
+    setPage(target);
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const openCategory = (value) => {
+    setCategory(value);
+    setPage("shop");
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <div className="app">
+      <div className="topbar">
+        <div className="container topbar-inner">
+          <span>🇮🇳 Pan India Delivery Available</span>
+          <span>Authentic Andhra Coastal Taste</span>
+          <span>Cash on Delivery Available</span>
+        </div>
+      </div>
+
+      <header className="header">
+        <div className="container header-inner">
+          <button
+            className="mobile-menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Open menu"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+
+          <button className="logo" onClick={() => goTo("home")}>
+            <span className="logo-icon">🐟</span>
+            <span>
+              <strong>ANDHRA</strong>
+              <small>DRY FISH</small>
+            </span>
+          </button>
+
+          <nav className={`nav ${menuOpen ? "nav-open" : ""}`}>
+            <button onClick={() => goTo("home")}>Home</button>
+
+            <button onClick={() => openCategory("Dry Fish")}>
+              Dry Fish
+            </button>
+
+            <button onClick={() => openCategory("Dry Prawns")}>
+              Dry Prawns
+            </button>
+
+            <button onClick={() => openCategory("Combos")}>
+              Combos
+            </button>
+
+            <button onClick={() => goTo("about")}>About Us</button>
+
+            <button onClick={() => goTo("contact")}>Contact</button>
+          </nav>
+
+          <div className="header-actions">
+            <div className="search-box">
+              <Search size={18} />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") goTo("shop");
+                }}
+                placeholder="Search products..."
+              />
+            </div>
+
+            <button className="icon-button" onClick={() => goTo("shop")}>
+              <User size={21} />
+            </button>
+
+            <button
+              className="cart-button"
+              onClick={() => goTo("cart")}
+              aria-label="Cart"
+            >
+              <ShoppingCart size={22} />
+              {cartCount > 0 && <span>{cartCount}</span>}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        {page === "home" && (
+          <Home
+            products={featuredProducts}
+            openProduct={openProduct}
+            openCategory={openCategory}
+            goTo={goTo}
+          />
+        )}
+
+        {page === "shop" && (
+          <Shop
+            products={filteredProducts}
+            category={category}
+            setCategory={setCategory}
+            search={search}
+            setSearch={setSearch}
+            openProduct={openProduct}
+          />
+        )}
+
+        {page === "product" && selectedProduct && (
+          <ProductDetails
+            product={selectedProduct}
+            addToCart={addToCart}
+            goTo={goTo}
+            openProduct={openProduct}
+          />
+        )}
+
+        {page === "cart" && (
+          <Cart
+            cart={cart}
+            updateQuantity={updateQuantity}
+            goTo={goTo}
+            setCart={setCart}
+          />
+        )}
+
+        {page === "checkout" && (
+          <Checkout
+            cart={cart}
+            setCart={setCart}
+            setOrder={setOrder}
+            goTo={goTo}
+          />
+        )}
+
+        {page === "success" && (
+          <OrderSuccess order={order} goTo={goTo} />
+        )}
+
+        {page === "about" && <About />}
+
+        {page === "contact" && <Contact />}
+      </main>
+
+      <Footer goTo={goTo} openCategory={openCategory} />
+    </div>
+  );
+}
+
+function Home({ products, openProduct, openCategory, goTo }) {
+  return (
+    <>
+      <section className="hero">
+        <div className="hero-overlay" />
+
+        <div className="container hero-content">
+          <div className="hero-copy">
+            <span className="eyebrow">AUTHENTIC ANDHRA TASTE</span>
+
+            <h1>
+              అసలైన ఆంధ్ర
+              <br />
+              <span>ఎండు చేపల రుచి</span>
+            </h1>
+
+            <p>
+              Premium sun-dried fish & prawns, carefully selected and
+              hygienically packed for your family.
+            </p>
+
+            <div className="hero-buttons">
+              <button
+                className="primary-button"
+                onClick={() => openCategory("Dry Fish")}
+              >
+                Shop Dry Fish <ArrowRight size={18} />
+              </button>
+
+              <button
+                className="secondary-button"
+                onClick={() => openCategory("Dry Prawns")}
+              >
+                Explore Dry Prawns
+              </button>
+            </div>
+
+            <div className="hero-trust">
+              <span>
+                <Check size={15} /> Quality Checked
+              </span>
+              <span>
+                <Check size={15} /> Hygienically Packed
+              </span>
+              <span>
+                <Check size={15} /> Pan India Delivery
+              </span>
+            </div>
+          </div>
+
+          <div className="hero-product">
+            <div className="hero-fish-circle">
+              <div className="hero-fish">🐟</div>
+              <div className="hero-prawn">🦐</div>
+            </div>
+
+            <div className="hero-badge">
+              <strong>100%</strong>
+              <span>Natural<br />Sun Dried</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="features">
+        <div className="container features-grid">
+          <Feature
+            icon={<SunIcon />}
+            title="Naturally Sun Dried"
+            text="Traditional drying process for authentic taste."
+          />
+
+          <Feature
+            icon={<Package />}
+            title="Hygienically Packed"
+            text="Freshly packed to preserve quality and flavour."
+          />
+
+          <Feature
+            icon={<Truck />}
+            title="Pan India Shipping"
+            text="We deliver Andhra taste right to your doorstep."
+          />
+
+          <Feature
+            icon={<Check />}
+            title="Quality Products"
+            text="Carefully selected premium seafood products."
+          />
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <SectionHeading
+            eyebrow="SHOP BY CATEGORY"
+            title="Taste the Best of Andhra"
+            text="Traditional coastal flavours, packed with care."
+          />
+
+          <div className="category-grid">
+            <CategoryCard
+              icon="🐟"
+              title="Premium Dry Fish"
+              text="Authentic Andhra sun-dried fish."
+              onClick={() => openCategory("Dry Fish")}
+            />
+
+            <CategoryCard
+              icon="🦐"
+              title="Dry Prawns"
+              text="Premium dried prawns with rich flavour."
+              onClick={() => openCategory("Dry Prawns")}
+            />
+
+            <CategoryCard
+              icon="🧺"
+              title="Special Combos"
+              text="Best value combinations for your family."
+              onClick={() => openCategory("Combos")}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="section section-soft">
+        <div className="container">
+          <SectionHeading
+            eyebrow="BEST SELLERS"
+            title="Our Most Loved Products"
+            text="Popular choices from Andhra seafood lovers."
+          />
+
+          <ProductGrid
+            products={products}
+            openProduct={openProduct}
+            limit={8}
+          />
+
+          <div className="center-button">
+            <button className="outline-button" onClick={() => goTo("shop")}>
+              View All Products <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="story-banner">
+        <div className="container story-grid">
+          <div className="story-visual">
+            <div className="story-circle">
+              <span>🌊</span>
+              <strong>ANDHRA</strong>
+              <small>COASTAL</small>
+            </div>
+          </div>
+
+          <div className="story-content">
+            <span className="eyebrow">FROM OUR COAST TO YOUR HOME</span>
+
+            <h2>
+              సంప్రదాయ రుచిని
+              <br />
+              <span>మీ ఇంటికి తీసుకువస్తున్నాం</span>
+            </h2>
+
+            <p>
+              Andhra coastal cuisine is famous for its bold flavours,
+              traditional recipes and delicious seafood. Our mission is to
+              bring that authentic taste to families across India.
+            </p>
+
+            <button className="primary-button" onClick={() => goTo("about")}>
+              Our Story <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
+          <SectionHeading
+            eyebrow="WHY ANDHRA DRY FISH?"
+            title="Authentic. Traditional. Delicious."
+            text="Everything you need for the perfect Andhra seafood experience."
+          />
+
+          <div className="why-grid">
+            <div className="why-card">
+              <span>🌞</span>
+              <h3>Traditional Drying</h3>
+              <p>
+                Natural drying inspired by traditional Andhra coastal
+                methods.
+              </p>
+            </div>
+
+            <div className="why-card">
+              <span>🧂</span>
+              <h3>Perfectly Prepared</h3>
+              <p>
+                Prepared with attention to flavour, texture and freshness.
+              </p>
+            </div>
+
+            <div className="why-card">
+              <span>📦</span>
+              <h3>Fresh Packing</h3>
+              <p>
+                Products are packed carefully to help maintain their quality.
+              </p>
+            </div>
+
+            <div className="why-card">
+              <span>❤️</span>
+              <h3>Made With Care</h3>
+              <p>
+                We want every order to taste like a meal from home.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="faq-section">
+        <div className="container faq-container">
+          <SectionHeading
+            eyebrow="FAQ"
+            title="Frequently Asked Questions"
+            text="Quick answers before you order."
+          />
+
+          <div className="faq-list">
+            <Faq
+              question="Do you deliver across India?"
+              answer="Yes. We offer Pan India delivery. Delivery availability and time may vary by location."
+            />
+
+            <Faq
+              question="Is Cash on Delivery available?"
+              answer="Yes, Cash on Delivery is available for eligible locations and orders."
+            />
+
+            <Faq
+              question="What pack sizes are available?"
+              answer="Our products are available in different pack sizes including 250g, 500g and 1kg depending on the product."
+            />
+
+            <Faq
+              question="How should I store dry fish?"
+              answer="Keep the pack sealed and store it in a cool, dry place. Refrigeration is recommended after opening."
+            />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function Feature({ icon, title, text }) {
+  return (
+    <div className="feature">
+      <div className="feature-icon">{icon}</div>
+
+      <div>
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </div>
+    </div>
+  );
+}
+
+function SunIcon() {
+  return <span className="sun-icon">☀️</span>;
+}
+
+function CategoryCard({ icon, title, text, onClick }) {
+  return (
+    <button className="category-card" onClick={onClick}>
+      <div className="category-image">
+        <span>{icon}</span>
+      </div>
+
+      <div className="category-info">
+        <h3>{title}</h3>
+        <p>{text}</p>
+        <span className="category-link">
+          Shop Now <ArrowRight size={16} />
+        </span>
+      </div>
+    </button>
+  );
+}
+
+function SectionHeading({ eyebrow, title, text }) {
+  return (
+    <div className="section-heading">
+      <span className="eyebrow">{eyebrow}</span>
+      <h2>{title}</h2>
+      {text && <p>{text}</p>}
+    </div>
+  );
+}
+
+function ProductGrid({ products, openProduct, limit }) {
+  const visibleProducts = limit ? products.slice(0, limit) : products;
+
+  if (!visibleProducts.length) {
+    return (
+      <div className="empty-products">
+        <div>🐟</div>
+        <h3>Products loading...</h3>
+        <p>Please make sure the backend is running on port 5000.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="product-grid">
+      {visibleProducts.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          openProduct={openProduct}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ProductCard({ product, openProduct }) {
+  const discount =
+    product.oldPrice && product.oldPrice > product.price
+      ? Math.round(
+          ((product.oldPrice - product.price) / product.oldPrice) * 100
+        )
+      : null;
+
+  return (
+    <article className="product-card">
+      <button
+        className="product-image"
+        onClick={() => openProduct(product)}
+      >
+        {discount && <span className="discount-badge">-{discount}%</span>}
+
+        <span className="product-emoji">
+          {demoVisuals[product.id] || "🐟"}
+        </span>
+
+        <span className="quick-view">View Product</span>
+      </button>
+
+      <div className="product-info">
+        <span className="product-category">{product.category}</span>
+
+        <button
+          className="product-name"
+          onClick={() => openProduct(product)}
+        >
+          {product.name}
+        </button>
+
+        <div className="rating">
+          <span>★★★★★</span>
+          <small> Premium Quality</small>
+        </div>
+
+        <div className="price-row">
+          <strong>₹{product.price}</strong>
+
+          {product.oldPrice && (
+            <del>₹{product.oldPrice}</del>
+          )}
+
+          {product.weight && <span>{product.weight}</span>}
+        </div>
+
+        <button
+          className="add-button"
+          onClick={() => openProduct(product)}
+        >
+          <ShoppingBag size={17} />
+          View & Add
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function Shop({
+  products,
+  category,
+  setCategory,
+  search,
+  setSearch,
+  openProduct,
+}) {
+  return (
+    <section className="shop-page section">
+      <div className="container">
+        <div className="page-header">
+          <div>
+            <span className="eyebrow">OUR COLLECTION</span>
+            <h1>Shop Andhra Dry Fish</h1>
+            <p>
+              Premium dry fish and prawns delivered across India.
+            </p>
+          </div>
+
+          <div className="shop-search">
+            <Search size={18} />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search dry fish, prawns..."
+            />
+          </div>
+        </div>
+
+        <div className="filter-bar">
+          <div className="category-filters">
+            {["All", "Dry Fish", "Dry Prawns", "Combos"].map((item) => (
+              <button
+                key={item}
+                className={category === item ? "active" : ""}
+                onClick={() => setCategory(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+          <span className="product-count">
+            {products.length} Products
+          </span>
+        </div>
+
+        <ProductGrid products={products} openProduct={openProduct} />
+      </div>
+    </section>
+  );
+}
+
+function ProductDetails({ product, addToCart, goTo }) {
+  const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
+
+  const discount =
+    product.oldPrice && product.oldPrice > product.price
+      ? Math.round(
+          ((product.oldPrice - product.price) / product.oldPrice) * 100
+        )
+      : null;
+
+  const handleAdd = () => {
+    addToCart(product, quantity);
+    setAdded(true);
+
+    setTimeout(() => setAdded(false), 1800);
+  };
+
+  return (
+    <section className="product-details-page section">
+      <div className="container">
+        <button className="back-button" onClick={() => goTo("shop")}>
+          <ChevronLeft size={18} />
+          Back to Shop
+        </button>
+
+        <div className="details-grid">
+          <div className="details-image">
+            {discount && <span className="discount-badge">-{discount}%</span>}
+
+            <span className="details-emoji">
+              {demoVisuals[product.id] || "🐟"}
+            </span>
+
+            <div className="image-label">
+              <span>🌞</span>
+              Naturally Sun Dried
+            </div>
+          </div>
+
+          <div className="details-content">
+            <span className="product-category">{product.category}</span>
+
+            <h1>{product.name}</h1>
+
+            <div className="details-rating">
+              <span>★★★★★</span>
+              <span>Premium Quality</span>
+            </div>
+
+            <div className="details-price">
+              <strong>₹{product.price}</strong>
+
+              {product.oldPrice && (
+                <del>₹{product.oldPrice}</del>
+              )}
+
+              {discount && (
+                <span className="save-badge">
+                  Save {discount}%
+                </span>
+              )}
+            </div>
+
+            <p className="details-description">
+              Premium quality {product.name}, traditionally prepared and
+              carefully packed to preserve its authentic Andhra coastal
+              flavour.
+            </p>
+
+            <div className="detail-divider" />
+
+            <div className="detail-row">
+              <span>Pack Size</span>
+              <strong>{product.weight || "500g"}</strong>
+            </div>
+
+            <div className="detail-row">
+              <span>Availability</span>
+              <strong className="available">
+                ✓ In Stock
+              </strong>
+            </div>
+
+            <div className="quantity-section">
+              <span>Quantity</span>
+
+              <div className="quantity-control">
+                <button
+                  onClick={() =>
+                    setQuantity((q) => Math.max(1, q - 1))
+                  }
+                >
+                  <Minus size={16} />
+                </button>
+
+                <strong>{quantity}</strong>
+
+                <button
+                  onClick={() =>
+                    setQuantity((q) =>
+                      Math.min(product.stock || 10, q + 1)
+                    )
+                  }
+                >
+                  <Plus size={16} />
+                </button>
+              </div>
+            </div>
+
+            <button
+              className={`large-add-button ${added ? "added" : ""}`}
+              onClick={handleAdd}
+            >
+              {added ? (
+                <>
+                  <Check size={20} />
+                  Added to Cart
+                </>
+              ) : (
+                <>
+                  <ShoppingCart size={20} />
+                  Add to Cart
+                </>
+              )}
+            </button>
+
+            <button
+              className="buy-now-button"
+              onClick={() => {
+                addToCart(product, quantity);
+                goTo("cart");
+              }}
+            >
+              Buy Now
+            </button>
+
+            <div className="delivery-info">
+              <div>
+                <Truck size={21} />
+                <span>
+                  <strong>Pan India Delivery</strong>
+                  <small>Safe delivery to your doorstep</small>
+                </span>
+              </div>
+
+              <div>
+                <Package size={21} />
+                <span>
+                  <strong>Secure Packaging</strong>
+                  <small>Carefully packed for freshness</small>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Cart({ cart, updateQuantity, goTo, setCart }) {
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const delivery = subtotal === 0 || subtotal >= 999 ? 0 : 99;
+  const total = subtotal + delivery;
+
+  if (!cart.length) {
+    return (
+      <section className="empty-page section">
+        <div className="container">
+          <div className="empty-cart">
+            <div className="empty-cart-icon">
+              <ShoppingCart size={48} />
+            </div>
+
+            <h1>Your Cart is Empty</h1>
+
+            <p>
+              Add your favourite Andhra dry fish and prawns to continue.
+            </p>
+
+            <button className="primary-button" onClick={() => goTo("shop")}>
+              Start Shopping <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="cart-page section">
+      <div className="container">
+        <div className="page-header simple">
+          <div>
+            <span className="eyebrow">YOUR ORDER</span>
+            <h1>Shopping Cart</h1>
+          </div>
+        </div>
+
+        <div className="cart-layout">
+          <div className="cart-items">
+            {cart.map((item) => (
+              <div className="cart-item" key={item.id}>
+                <div className="cart-item-image">
+                  {demoVisuals[item.id] || "🐟"}
+                </div>
+
+                <div className="cart-item-info">
+                  <span>{item.category}</span>
+                  <h3>{item.name}</h3>
+                  <small>{item.weight}</small>
+
+                  <div className="cart-item-price">
+                    ₹{item.price}
+                  </div>
+                </div>
+
+                <div className="cart-item-actions">
+                  <div className="quantity-control">
+                    <button
+                      onClick={() =>
+                        updateQuantity(
+                          item.id,
+                          item.quantity - 1
+                        )
+                      }
+                    >
+                      <Minus size={15} />
+                    </button>
+
+                    <strong>{item.quantity}</strong>
+
+                    <button
+                      onClick={() =>
+                        updateQuantity(
+                          item.id,
+                          item.quantity + 1
+                        )
+                      }
+                    >
+                      <Plus size={15} />
+                    </button>
+                  </div>
+
+                  <strong className="item-total">
+                    ₹{item.price * item.quantity}
+                  </strong>
+
+                  <button
+                    className="remove-button"
+                    onClick={() =>
+                      updateQuantity(item.id, 0)
+                    }
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button className="continue-shopping" onClick={() => goTo("shop")}>
+              <ChevronLeft size={18} />
+              Continue Shopping
+            </button>
+          </div>
+
+          <OrderSummary
+            subtotal={subtotal}
+            delivery={delivery}
+            total={total}
+            goTo={() => goTo("checkout")}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function OrderSummary({ subtotal, delivery, total, goTo }) {
+  return (
+    <aside className="order-summary">
+      <h2>Order Summary</h2>
+
+      <div className="summary-line">
+        <span>Subtotal</span>
+        <strong>₹{subtotal}</strong>
+      </div>
+
+      <div className="summary-line">
+        <span>Delivery</span>
+        <strong>
+          {delivery === 0 ? "FREE" : `₹${delivery}`}
+        </strong>
+      </div>
+
+      {delivery > 0 && (
+        <p className="shipping-note">
+          Free delivery on orders above ₹999
+        </p>
+      )}
+
+      <div className="summary-total">
+        <span>Total</span>
+        <strong>₹{total}</strong>
+      </div>
+
+      <button className="checkout-button" onClick={goTo}>
+        Proceed to Checkout <ArrowRight size={18} />
+      </button>
+
+      <div className="cod-note">
+        <Check size={17} />
+        Cash on Delivery Available
+      </div>
+    </aside>
+  );
+}
+
+function Checkout({ cart, setCart, setOrder, goTo }) {
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const delivery = subtotal >= 999 ? 0 : 99;
+  const total = subtotal + delivery;
+
+  const change = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const placeOrder = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!cart.length) {
+      setError("Your cart is empty.");
+      return;
+    }
+
+    setLoading(true);
+
+    const payload = {
+      customer: form,
+      items: cart.map((item) => ({
+        productId: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        weight: item.weight,
+      })),
+      paymentMethod: "Cash on Delivery",
+    };
+
+    try {
+      const response = await fetch(`${API}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Order failed");
+      }
+
+      setOrder(data.order);
+      setCart([]);
+      goTo("success");
+    } catch (err) {
+      console.error(err);
+      setError(
+        "Unable to place the order. Please check that the backend is running."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="checkout-page section">
+      <div className="container">
+        <div className="page-header simple">
+          <div>
+            <span className="eyebrow">CHECKOUT</span>
+            <h1>Complete Your Order</h1>
+            <p>Enter your delivery details below.</p>
+          </div>
+        </div>
+
+        <form className="checkout-layout" onSubmit={placeOrder}>
+          <div className="checkout-form">
+            <div className="form-card">
+              <div className="form-card-heading">
+                <div className="number">1</div>
+                <div>
+                  <h2>Delivery Information</h2>
+                  <p>Where should we deliver your order?</p>
+                </div>
+              </div>
+
+              <div className="form-grid">
+                <label>
+                  Full Name *
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={change}
+                    required
+                    placeholder="Your full name"
+                  />
+                </label>
+
+                <label>
+                  Phone Number *
+                  <input
+                    name="phone"
+                    value={form.phone}
+                    onChange={change}
+                    required
+                    placeholder="10 digit mobile number"
+                  />
+                </label>
+
+                <label className="full">
+                  Email Address
+                  <input
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={change}
+                    placeholder="your@email.com"
+                  />
+                </label>
+
+                <label className="full">
+                  Full Address *
+                  <textarea
+                    name="address"
+                    value={form.address}
+                    onChange={change}
+                    required
+                    placeholder="House / Flat number, Street, Area"
+                    rows="4"
+                  />
+                </label>
+
+                <label>
+                  City *
+                  <input
+                    name="city"
+                    value={form.city}
+                    onChange={change}
+                    required
+                    placeholder="City"
+                  />
+                </label>
+
+                <label>
+                  State *
+                  <input
+                    name="state"
+                    value={form.state}
+                    onChange={change}
+                    required
+                    placeholder="State"
+                  />
+                </label>
+
+                <label>
+                  Pincode *
+                  <input
+                    name="pincode"
+                    value={form.pincode}
+                    onChange={change}
+                    required
+                    placeholder="6 digit pincode"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="form-card">
+              <div className="form-card-heading">
+                <div className="number">2</div>
+                <div>
+                  <h2>Payment Method</h2>
+                  <p>Simple and secure payment options.</p>
+                </div>
+              </div>
+
+              <div className="payment-option selected">
+                <div className="payment-radio">✓</div>
+
+                <div>
+                  <strong>Cash on Delivery</strong>
+                  <span>Pay when your order arrives.</span>
+                </div>
+
+                <span className="cod-label">COD</span>
+              </div>
+            </div>
+
+            {error && <div className="checkout-error">{error}</div>}
+          </div>
+
+          <aside className="checkout-summary">
+            <h2>Your Order</h2>
+
+            <div className="checkout-products">
+              {cart.map((item) => (
+                <div className="checkout-product" key={item.id}>
+                  <div className="mini-product-image">
+                    {demoVisuals[item.id] || "🐟"}
+                  </div>
+
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>
+                      {item.weight} × {item.quantity}
+                    </span>
+                  </div>
+
+                  <b>₹{item.price * item.quantity}</b>
+                </div>
+              ))}
+            </div>
+
+            <div className="summary-line">
+              <span>Subtotal</span>
+              <strong>₹{subtotal}</strong>
+            </div>
+
+            <div className="summary-line">
+              <span>Delivery</span>
+              <strong>
+                {delivery === 0 ? "FREE" : `₹${delivery}`}
+              </strong>
+            </div>
+
+            <div className="summary-total">
+              <span>Total</span>
+              <strong>₹{total}</strong>
+            </div>
+
+            <button
+              className="checkout-button"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? "Placing Order..." : "Place Order"}
+              {!loading && <ArrowRight size={18} />}
+            </button>
+
+            <p className="secure-note">
+              🔒 Your information is securely processed.
+            </p>
+          </aside>
+        </form>
+      </div>
+    </section>
+  );
+}
+
+function OrderSuccess({ order, goTo }) {
+  const orderId = order?.orderId || order?.id || "ADF-DEMO";
+
+  const whatsappText = encodeURIComponent(
+    `Hello Andhra Dry Fish! I placed an order.\n\nOrder ID: ${orderId}\nName: ${
+      order?.customer?.name || ""
+    }\nTotal: ₹${order?.total || ""}`
+  );
+
+  return (
+    <section className="success-page section">
+      <div className="container">
+        <div className="success-card">
+          <div className="success-icon">
+            <Check size={45} />
+          </div>
+
+          <span className="eyebrow">ORDER CONFIRMED</span>
+
+          <h1>Thank You for Your Order! 🎉</h1>
+
+          <p>
+            Your Andhra Dry Fish order has been successfully placed.
+          </p>
+
+          <div className="order-number">
+            <span>Order ID</span>
+            <strong>{orderId}</strong>
+          </div>
+
+          <div className="success-info">
+            <div>
+              <Package size={21} />
+              <span>
+                <strong>Order Processing</strong>
+                <small>We will prepare your order shortly.</small>
+              </span>
+            </div>
+
+            <div>
+              <Truck size={21} />
+              <span>
+                <strong>Delivery</strong>
+                <small>Our team will contact you regarding delivery.</small>
+              </span>
+            </div>
+          </div>
+
+          <div className="success-buttons">
+            <button
+              className="primary-button"
+              onClick={() =>
+                window.open(
+                  `https://wa.me/?text=${whatsappText}`,
+                  "_blank"
+                )
+              }
+            >
+              Order Details on WhatsApp
+            </button>
+
+            <button className="outline-button" onClick={() => goTo("home")}>
+              Continue Shopping
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section className="about-page section">
+      <div className="container">
+        <div className="page-header centered">
+          <span className="eyebrow">OUR STORY</span>
+          <h1>About Andhra Dry Fish</h1>
+          <p>
+            Bringing the authentic taste of Andhra's coastal cuisine to
+            homes across India.
+          </p>
+        </div>
+
+        <div className="about-story">
+          <div className="about-visual">
+            <div className="about-fish">🐟</div>
+            <div className="about-prawn">🦐</div>
+            <span>Authentic Andhra Taste</span>
+          </div>
+
+          <div className="about-copy">
+            <span className="eyebrow">FROM THE ANDHRA COAST</span>
+
+            <h2>
+              Tradition in
+              <br />
+              <span>Every Bite</span>
+            </h2>
+
+            <p>
+              Andhra cuisine is known for its bold flavours and love for
+              seafood. Dry fish has been a part of coastal Andhra food
+              traditions for generations.
+            </p>
+
+            <p>
+              Andhra Dry Fish is built around one simple idea: make
+              authentic coastal flavours easier for families everywhere
+              to enjoy.
+            </p>
+
+            <p>
+              We focus on quality products, careful preparation, hygienic
+              packaging and dependable delivery.
+            </p>
+
+            <div className="about-values">
+              <div>
+                <strong>01</strong>
+                <span>Quality First</span>
+              </div>
+
+              <div>
+                <strong>02</strong>
+                <span>Authentic Taste</span>
+              </div>
+
+              <div>
+                <strong>03</strong>
+                <span>Customer Care</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="about-features">
+          <div>
+            <span>🌞</span>
+            <h3>Traditional Methods</h3>
+            <p>Inspired by Andhra coastal food traditions.</p>
+          </div>
+
+          <div>
+            <span>❤️</span>
+            <h3>Made With Care</h3>
+            <p>Every order is prepared and packed carefully.</p>
+          </div>
+
+          <div>
+            <span>🇮🇳</span>
+            <h3>Across India</h3>
+            <p>Authentic Andhra taste delivered nationwide.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  return (
+    <section className="contact-page section">
+      <div className="container">
+        <div className="page-header centered">
+          <span className="eyebrow">GET IN TOUCH</span>
+          <h1>Contact Us</h1>
+          <p>
+            Have a question about our products or your order? We are here
+            to help.
+          </p>
+        </div>
+
+        <div className="contact-grid">
+          <div className="contact-card">
+            <div className="contact-icon">
+              <Phone size={23} />
+            </div>
+            <h3>Call Us</h3>
+            <p>Speak to our customer support team.</p>
+            <a href="tel:+919999999999">+91 99999 99999</a>
+          </div>
+
+          <div className="contact-card">
+            <div className="contact-icon">
+              <Mail size={23} />
+            </div>
+            <h3>Email Us</h3>
+            <p>Send us your questions anytime.</p>
+            <a href="mailto:hello@andhradryfish.in">
+              hello@andhradryfish.in
+            </a>
+          </div>
+
+          <div className="contact-card">
+            <div className="contact-icon">
+              <MapPin size={23} />
+            </div>
+            <h3>Our Location</h3>
+            <p>Andhra Pradesh, India</p>
+            <span>Pan India Delivery</span>
+          </div>
+        </div>
+
+        <div className="contact-bottom">
+          <div>
+            <span className="eyebrow">WHATSAPP ORDERS</span>
+            <h2>Want to order directly?</h2>
+            <p>
+              You can also contact us through WhatsApp for product
+              enquiries and orders.
+            </p>
+
+            <a
+              className="whatsapp-button"
+              href="https://wa.me/919999999999"
+              target="_blank"
+              rel="noreferrer"
+            >
+              WhatsApp Us
+            </a>
+          </div>
+
+          <div className="contact-map">
+            <span>📍</span>
+            <strong>ANDHRA PRADESH</strong>
+            <small>Authentic Coastal Taste</small>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Faq({ question, answer }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className={`faq ${open ? "open" : ""}`}>
+      <button onClick={() => setOpen((v) => !v)}>
+        <span>{question}</span>
+        {open ? <X size={20} /> : <Plus size={20} />}
+      </button>
+
+      {open && <p>{answer}</p>}
+    </div>
+  );
+}
+
+function Footer({ goTo, openCategory }) {
+  return (
+    <footer className="footer">
+      <div className="container footer-main">
+        <div className="footer-brand">
+          <button className="logo footer-logo" onClick={() => goTo("home")}>
+            <span className="logo-icon">🐟</span>
+            <span>
+              <strong>ANDHRA</strong>
+              <small>DRY FISH</small>
+            </span>
+          </button>
+
+          <p>
+            Authentic Andhra dry fish and dry prawns, bringing coastal
+            flavours to your home.
+          </p>
+
+          <div className="socials">
+            <a href="#" aria-label="Instagram">
+            </a>
+
+            <a href="#" aria-label="Facebook">
+            </a>
+
+            <a href="mailto:hello@andhradryfish.in" aria-label="Email">
+              <Mail size={18} />
+            </a>
+          </div>
+        </div>
+
+        <div className="footer-column">
+          <h3>Shop</h3>
+
+          <button onClick={() => openCategory("Dry Fish")}>
+            Dry Fish
+          </button>
+
+          <button onClick={() => openCategory("Dry Prawns")}>
+            Dry Prawns
+          </button>
+
+          <button onClick={() => openCategory("Combos")}>
+            Combos
+          </button>
+
+          <button onClick={() => goTo("shop")}>
+            All Products
+          </button>
+        </div>
+
+        <div className="footer-column">
+          <h3>Information</h3>
+
+          <button onClick={() => goTo("about")}>About Us</button>
+          <button onClick={() => goTo("contact")}>Contact</button>
+          <button onClick={() => goTo("home")}>FAQ</button>
+          <button onClick={() => goTo("home")}>Shipping Policy</button>
+        </div>
+
+        <div className="footer-column">
+          <h3>Contact</h3>
+
+          <span>
+            <Phone size={16} /> +91 99999 99999
+          </span>
+
+          <span>
+            <Mail size={16} /> hello@andhradryfish.in
+          </span>
+
+          <span>
+            <MapPin size={16} /> Andhra Pradesh, India
+          </span>
+
+          <span>
+            <Truck size={16} /> Pan India Delivery
+          </span>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <div className="container footer-bottom-inner">
+          <span>
+            © {new Date().getFullYear()} Andhra Dry Fish. All Rights
+            Reserved.
+          </span>
+
+          <div>
+            <button>Privacy Policy</button>
+            <button>Terms & Conditions</button>
+            <button>Refund Policy</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default App;
+
+
+
+createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
